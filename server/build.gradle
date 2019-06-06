@@ -25,12 +25,14 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	compile 'io.kubernetes:client-java:4.0.0'
 }
 
 
 docker {
 	dockerfile file("./src/docker/Dockerfile")
-	name "192.168.86.23:5000/${bootJar.baseName}"
+	name "192.168.86.20:5000/${bootJar.baseName}"
 	files tasks.bootJar.outputs.files.singleFile
 	buildArgs(['JAR_FILE': "${archivesBaseName}-${version}.jar"])
 }
