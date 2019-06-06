@@ -1,3 +1,9 @@
+.DS_Store
+.gradle
+.idea
+kubecheck.iml
+node_modules
+
 # Compiled class file
 *.class
 
