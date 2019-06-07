@@ -54,6 +54,7 @@ public class ResourceService {
 
             com.kubecheck.server.models.Service service = new com.kubecheck.server.models.Service();
             service.name = s.getMetadata().getName();
+            service.type = "Service";
             service.port = s.getSpec().getPorts().get(0).getPort();
 
             Map<String, String> selector =  s.getSpec().getSelector();
@@ -71,6 +72,7 @@ public class ResourceService {
                         Pod pod = new Pod();
 
                         pod.name = p.getMetadata().getName();
+                        pod.type = "Pod";
                         return pod;
                     }).collect(Collectors.toList());
                 }

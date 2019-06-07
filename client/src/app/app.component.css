@@ -1,0 +1,12 @@
+.main {
+    display: flex;
+}
+
+.main-panel {
+    flex: 1;
+}
+
+.right-panel {
+    width: 300px;
+    padding: 20px;
+}

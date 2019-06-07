@@ -1,8 +1,16 @@
-<!--The content below is only a placeholder and can be replaced.-->
+<div class="main">
+  <div class="main-panel">
+    <graph (selected)="onSelection($event)"></graph>
+  </div>
+  <div class="right-panel">
 
+    <div *ngIf="selected != null">
+      <div>Name</div>
+      <div>{{selected?.name}}</div>
 
-<div style="width: 900px; height: 900px; border: 1px solid blue;" id="testing">
+      <div>Type</div>
+      <div>{{selected?.type}}</div>
 
-
+    </div>
+  </div>
 </div>
-

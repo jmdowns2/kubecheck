@@ -10,6 +10,6 @@ export class KubecheckService {
 
   getServices() {
     var url = `http://localhost:8080/services`;
-    return this.http.get<any>(url);
+    return this.http.get<Resource[]>(url);
   }
 }
