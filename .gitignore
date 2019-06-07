@@ -3,6 +3,7 @@
 .idea
 kubecheck.iml
 node_modules
+dist
 
 # Compiled class file
 *.class
