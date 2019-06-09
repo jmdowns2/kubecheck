@@ -11,6 +11,12 @@
       <div>Type</div>
       <div>{{selected?.type}}</div>
 
+      <div>Checks</div>
+      <div *ngFor="let c of selectedChecks">
+        <button (click)="doCheck(c)">{{c}}</button>
+      </div>
+
+      {{checkResult}}
     </div>
   </div>
 </div>

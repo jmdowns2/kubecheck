@@ -8,23 +8,42 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Netstat {
+public class Netstat implements ICheck {
+
 
     ResourceService s;
 
+
     public Netstat(ResourceService s) { this.s = s; }
 
-    public List<Integer> check(String pod, String namespace) throws InterruptedException, ApiException, IOException {
+    public String getName() { return "Netstat"; }
+
+    public CheckResult execute(String pod, String namespace)  {
+
+        CheckResult result = new CheckResult();
 
         String[] cmd = new String[] { "sh", "-c", "netstat -l" };
-        String res = s.executePodCmd(pod, namespace, cmd);
-        if(res == null)
-            return null;
+        String res = null;
+        try {
+            res = s.executePodCmd(pod, namespace, cmd);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.available = false;
+            return result;
+        }
+        if(res == null) {
+            result.available = false;
+            return result;
+        }
 
         String[] lines  = res.split("\n");
-        return Arrays.stream(lines).map( line -> {
+        List<Integer> ports = Arrays.stream(lines).map( line -> {
             return parseListenPort(line);
         }).filter((port) -> { return port > 0; }).collect(Collectors.toList());
+
+        result.available = true;
+        result.result = "Ports open = "+ports.stream().map((p) -> p.toString()).collect(Collectors.joining(", "));
+        return result;
     }
 
     private Integer parseListenPort(String line)

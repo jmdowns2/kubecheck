@@ -1,6 +1,8 @@
 package com.kubecheck.server.services;
 
 
+import com.kubecheck.server.checks.ICheck;
+import com.kubecheck.server.checks.Netstat;
 import com.kubecheck.server.models.Pod;
 import com.kubecheck.server.models.Resource;
 import io.kubernetes.client.ApiClient;
@@ -20,6 +22,7 @@ import java.io.*;
 import java.nio.ByteOrder;
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -30,8 +33,25 @@ public class ResourceService {
 
     CoreV1Api api;
 
+    List<ICheck> serviceChecks = new ArrayList<ICheck>();
+    List<ICheck> podChecks = new ArrayList<ICheck>();
+
+
     ResourceService() {
         init();
+
+        registerPodCheck(new Netstat(this));
+    }
+
+    public List<ICheck> getServiceChecks() { return serviceChecks; }
+    public List<ICheck> getPodChecks() { return podChecks; }
+
+    protected void registerServiceCheck(ICheck check) {
+        serviceChecks.add(check);
+    }
+
+    protected void registerPodCheck(ICheck check) {
+        podChecks.add(check);
     }
 
     void init() {
@@ -54,6 +74,7 @@ public class ResourceService {
 
             com.kubecheck.server.models.Service service = new com.kubecheck.server.models.Service();
             service.name = s.getMetadata().getName();
+            service.namespace = s.getMetadata().getNamespace();
             service.type = "Service";
             service.port = s.getSpec().getPorts().get(0).getPort();
 
@@ -72,6 +93,7 @@ public class ResourceService {
                         Pod pod = new Pod();
 
                         pod.name = p.getMetadata().getName();
+                        pod.namespace = p.getMetadata().getNamespace();
                         pod.type = "Pod";
                         return pod;
                     }).collect(Collectors.toList());
