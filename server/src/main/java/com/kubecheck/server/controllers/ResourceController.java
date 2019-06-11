@@ -32,6 +32,16 @@ public class ResourceController {
                 .map((c) -> c.getName() ).collect(Collectors.toList());
     }
 
+    @GetMapping("/services/{namespace}/{name}/check/{checkName}")
+    public CheckResult serviceCheck(@PathVariable String namespace, @PathVariable String name, @PathVariable String checkName) throws Exception {
+        ICheck check =  service.getServiceChecks().stream()
+                .filter((c) -> c.getName().compareToIgnoreCase(checkName) == 0)
+                .findFirst().orElseThrow(() -> new Exception(checkName+" not found"));
+
+        return check.execute(name, namespace);
+    }
+
+
     @GetMapping("/pods/checks")
     public List<String> getPodsChecks() {
         return service.getPodChecks().stream()

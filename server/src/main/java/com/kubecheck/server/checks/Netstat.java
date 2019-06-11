@@ -10,9 +10,7 @@ import java.util.stream.Collectors;
 
 public class Netstat implements ICheck {
 
-
     ResourceService s;
-
 
     public Netstat(ResourceService s) { this.s = s; }
 

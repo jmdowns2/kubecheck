@@ -3,6 +3,7 @@ package com.kubecheck.server.services;
 
 import com.kubecheck.server.checks.ICheck;
 import com.kubecheck.server.checks.Netstat;
+import com.kubecheck.server.checks.ServicePorts;
 import com.kubecheck.server.models.Pod;
 import com.kubecheck.server.models.Resource;
 import io.kubernetes.client.ApiClient;
@@ -40,6 +41,8 @@ public class ResourceService {
     ResourceService() {
         init();
 
+        registerServiceCheck(new ServicePorts(this));
+
         registerPodCheck(new Netstat(this));
     }
 
@@ -65,6 +68,10 @@ public class ResourceService {
             e.printStackTrace();
         }
         api = new CoreV1Api();
+    }
+
+    public V1Service getService(String resourceName, String namespace) throws ApiException {
+        return api.readNamespacedService(resourceName, namespace, null, null, null);
     }
 
     public List<Resource> getServices() throws ApiException {
