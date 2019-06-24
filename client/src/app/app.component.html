@@ -13,7 +13,7 @@
 
       <div>Checks</div>
       <div *ngFor="let c of selectedChecks">
-        <button (click)="doCheck(c)">{{c}}</button>
+        <button (click)="doCheck(c)">{{c.name}}</button>
       </div>
 
       {{checkResult}}

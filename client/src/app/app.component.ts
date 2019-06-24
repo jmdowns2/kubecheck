@@ -12,11 +12,11 @@ export class AppComponent implements OnInit {
   title = 'app';
 
   selected:Resource = null;
-  selectedChecks:String[] = [];
+  selectedChecks:Check[] = [];
   checkResult:String = "";
 
-  podChecks:String[] = [];
-  serviceChecks:String[] = [];
+  podChecks:Check[] = [];
+  serviceChecks:Check[] = [];
 
 
   constructor(private service:KubecheckService) {}
@@ -50,10 +50,19 @@ export class AppComponent implements OnInit {
     }
   }
 
-  doCheck(check:String)
+  doCheck(check:Check)
   {
+    var options = [];
+    if(check.options)
+    {
+      check.options.map((option) => {
+        var v = prompt(option);
+        options.push({ name: option, value: v});
+      });
+    }
+
     this.checkResult = "";
-    this.service.check(this.selected, check).subscribe((res) => {
+    this.service.check(this.selected, check, options).subscribe((res) => {
       this.checkResult = JSON.stringify(res);
     });
   }

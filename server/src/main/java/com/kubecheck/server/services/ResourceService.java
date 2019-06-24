@@ -1,6 +1,7 @@
 package com.kubecheck.server.services;
 
 
+import com.kubecheck.server.checks.Curl;
 import com.kubecheck.server.checks.ICheck;
 import com.kubecheck.server.checks.Netstat;
 import com.kubecheck.server.checks.ServicePorts;
@@ -44,6 +45,7 @@ public class ResourceService {
         registerServiceCheck(new ServicePorts(this));
 
         registerPodCheck(new Netstat(this));
+        registerPodCheck(new Curl(this));
     }
 
     public List<ICheck> getServiceChecks() { return serviceChecks; }
@@ -115,7 +117,7 @@ public class ResourceService {
         }).collect(Collectors.toList());
     }
 
-    public String executePodCmd(String podName, String namespace, String[] cmd) throws ApiException, InterruptedException, IOException {
+    public String executePodCmd(String podName, String namespace, String[] cmd) throws Exception {
 
         Exec exec = new Exec();
 
@@ -129,7 +131,7 @@ public class ResourceService {
 
         BufferedReader buffReader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 
-        proc.waitFor();
+        proc.waitFor(5, TimeUnit.SECONDS);
 
         String out = "";
         String line;
@@ -140,6 +142,11 @@ public class ResourceService {
         proc.destroy();
 
         int exitValue = proc.exitValue();
+
+        if(exitValue == 127)
+        {
+            throw new Exception("Command not available");
+        }
 
         return out;
     }

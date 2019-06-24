@@ -4,6 +4,8 @@ import com.kubecheck.server.services.ResourceService;
 import io.kubernetes.client.ApiException;
 import io.kubernetes.client.models.V1Service;
 
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ServicePorts implements ICheck {
@@ -13,7 +15,9 @@ public class ServicePorts implements ICheck {
     public ServicePorts(ResourceService s) { this.s = s; }
 
     public String getName() { return "Service Ports"; }
-    public CheckResult execute(String resourceName, String namespace)
+    public List<String> getOptions() { return null; }
+
+    public CheckResult execute(String resourceName, String namespace, Map<String,String> requestParams)
     {
         V1Service service;
         try {

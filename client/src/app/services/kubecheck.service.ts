@@ -15,17 +15,21 @@ export class KubecheckService {
 
   getServiceChecks() {
     var url = `http://localhost:8080/services/checks`;
-    return this.http.get<String[]>(url);
+    return this.http.get<Check[]>(url);
   }
 
   getPodChecks() {
     var url = `http://localhost:8080/pods/checks`;
-    return this.http.get<String[]>(url);
+    return this.http.get<Check[]>(url);
   }
 
-  check(r:Resource, c:String)
+  check(r:Resource, c:Check, options:Array<any>)
   {
-    var url = `http://localhost:8080/${r.type.toLowerCase()}s/${r.namespace}/${r.name}/check/${c}`;
+    var o:string = options ? options.map((v) => {
+      return `${v.name}=${v.value}`
+    }).join("&") : "";
+
+    var url = `http://localhost:8080/${r.type.toLowerCase()}s/${r.namespace}/${r.name}/check/${c.name}?${o}`;
     return this.http.get<String>(url, {});
   }
 }

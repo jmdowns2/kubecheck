@@ -6,6 +6,7 @@ import io.kubernetes.client.ApiException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Netstat implements ICheck {
@@ -15,8 +16,10 @@ public class Netstat implements ICheck {
     public Netstat(ResourceService s) { this.s = s; }
 
     public String getName() { return "Netstat"; }
+    public List<String> getOptions() { return null; }
 
-    public CheckResult execute(String pod, String namespace)  {
+
+    public CheckResult execute(String pod, String namespace, Map<String,String> requestParams)  {
 
         CheckResult result = new CheckResult();
 
