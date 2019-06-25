@@ -1,10 +1,7 @@
 package com.kubecheck.server.services;
 
 
-import com.kubecheck.server.checks.Curl;
-import com.kubecheck.server.checks.ICheck;
-import com.kubecheck.server.checks.Netstat;
-import com.kubecheck.server.checks.ServicePorts;
+import com.kubecheck.server.checks.*;
 import com.kubecheck.server.models.Pod;
 import com.kubecheck.server.models.Resource;
 import io.kubernetes.client.ApiClient;
@@ -46,6 +43,7 @@ public class ResourceService {
 
         registerPodCheck(new Netstat(this));
         registerPodCheck(new Curl(this));
+        registerPodCheck(new Shell(this));
     }
 
     public List<ICheck> getServiceChecks() { return serviceChecks; }
